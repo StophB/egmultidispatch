@@ -50,10 +50,25 @@ class EgMultiDispatchClass extends ObjectModel
             'active' =>['type' => self::TYPE_BOOL],
         ]
     ];
+    
+    public static function getDataBases() {
+        $mysqli = new mysqli('127.0.0.1', 'root', '');
 
-    public static function getDataBases(){
-        return ['presta', 'pstut'];
+        if ($mysqli->connect_error) die("Connection failed: " . $mysqli->connect_error);
+
+        $result = $mysqli->query("SHOW DATABASES");
+        $databases = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $databases[] = $row['Database'];
+        }
+
+        $mysqli->close();
+
+        return $databases;
     }
+
+
 
     public static function getCheckedDataBases($selectedSites) {
         $selectedSites = array_map('intval', $selectedSites);
